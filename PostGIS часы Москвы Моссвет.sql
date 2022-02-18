@@ -129,7 +129,7 @@ SELECT "φλ",
             THEN 'pole'::text
             ELSE NULL::text
         END "support",
-       'https://data.mos.ru/opendata/1499/data'::text "source",
+       'https://data.mos.ru/opendata/1499'::text "source",
        'clock'::text "amenity",
        -"№" id
   FROM "Часы Москвы"."1 Часы Моссвет" "ч";
@@ -277,14 +277,19 @@ SELECT count(*) FROM "Часы Москвы"."1 Столбы data.mos.ru";
 
 DROP MATERIALIZED VIEW "Часы Москвы"."2 Столбы с привязкой";
 CREATE MATERIALIZED VIEW "Часы Москвы"."2 Столбы с привязкой" as
+
+CREATE MATERIALIZED VIEW "Часы Москвы"."2 Столбы с привязкой 1" as
 SELECT сo."Код OSM",
        сo.φλ φλ_OSM,
+       ST_Buffer(сo.φλ, 10) b,
        сo."Оператор",
        сo."n💡" "n💡 OSM",
        сo."Ввод в строй",
-       см.*,
+       см.*,       
        ST_Distance(st_transform(сo.φλ,4326)::geography, st_transform(см.φλ,4326)::geography) "Δ м"
   FROM "Часы Москвы"."1 Столбы data.mos.ru" см   
   LEFT JOIN "Часы Москвы"."1 Столбы OSM" сo 
-    ON см."Округ" = 'Южный административный округ'
-   AND ST_Distance(st_transform(сo.φλ,4326)::geography, st_transform(см.φλ,4326)::geography) < 7;
+    ON ST_DWithin(st_transform(сo.φλ,4326)::geography, st_transform(см.φλ,4326)::geography, 7, true);
+   
+   
+select * from "Часы Москвы"."2 Столбы с привязкой" см where см."Округ" = 'Южный административный округ';   
