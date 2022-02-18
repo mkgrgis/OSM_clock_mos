@@ -285,6 +285,6 @@ SELECT сo."Код OSM",
        см.*,
        ST_Distance(st_transform(сo.φλ,4326)::geography, st_transform(см.φλ,4326)::geography) "Δ м"
   FROM "Часы Москвы"."1 Столбы data.mos.ru" см   
- INNER JOIN "Часы Москвы"."1 Столбы OSM" сo 
+  LEFT JOIN "Часы Москвы"."1 Столбы OSM" сo 
     ON см."Округ" = 'Южный административный округ'
    AND ST_Distance(st_transform(сo.φλ,4326)::geography, st_transform(см.φλ,4326)::geography) < 7;
