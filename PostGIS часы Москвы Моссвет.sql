@@ -162,10 +162,10 @@ SELECT сo."№",
 
 CREATE OR REPLACE VIEW "Часы Москвы"."3 Экспорт Моссвет" AS
 SELECT чм.*,
-       ST_Distance(st_transform(чo.φλ,4326)::geography, st_transform(чм.φλ,4326)) "Δ м"
+       ST_Distance(st_transform(чo.φλ,4326)::geography, st_transform(чм.φλ,4326)::geography) "Δ м"
   FROM "Часы Москвы"."2 Теги на Моссвет" чм
   LEFT JOIN "Часы Москвы"."1 Часы OSM" чo
-    ON ST_Distance(st_transform(чo.φλ,4326)::geography, st_transform(чм.φλ,4326)) < 17.0
+    ON ST_Distance(st_transform(чo.φλ,4326)::geography, st_transform(чм.φλ,4326)::geography) < 17.0
  WHERE "чo"."φλ" IS null
    AND NOT ("чм"."ref:data.mos.ru" IN ( SELECT o."Код" FROM "Часы Москвы"."2 Часы на опорах" o))
    AND NOT ("чм"."ref:data.mos.ru" IN ( SELECT n."ref:data.mos.ru" FROM "Часы Москвы"."∄" n))
