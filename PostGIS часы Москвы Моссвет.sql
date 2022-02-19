@@ -47,7 +47,7 @@ COMMENT ON TABLE "Часы Москвы"."data.mos.ru столбы" IS 'https://
 CREATE OR REPLACE VIEW "Часы Москвы"."1 Часы Моссвет"
 AS WITH data AS (
 SELECT "GeoJSON" fc
-  FROM "data.mos.ru Часы"
+  FROM "Часы Москвы"."data.mos.ru Часы"
 ), f AS (
  SELECT json_array_elements(data.fc -> 'features') ft
    FROM data
@@ -68,7 +68,7 @@ SELECT row_number() OVER () "№",
 CREATE OR REPLACE VIEW "Часы Москвы"."1 Часы OSM" AS
 WITH data AS (
 SELECT "OSM OverPass часы"."JSON" fc
- FROM "OSM OverPass часы"
+ FROM "Часы Москвы"."OSM OverPass часы"
 ), f AS (
 SELECT json_array_elements(data.fc -> 'elements') ft
  FROM data
@@ -87,7 +87,7 @@ SELECT row_number() OVER () "№",
 CREATE MATERIALIZED VIEW "Часы Москвы"."1 Столбы OSM"
 AS WITH data AS (
 SELECT "JSON" AS fc
-  FROM "OSM OverPass столбы"
+  FROM "Часы Москвы"."OSM OverPass столбы"
 ), f AS (
 SELECT json_array_elements(data.fc -> 'elements') ft
   FROM data
@@ -131,6 +131,7 @@ SELECT "φλ",
         END "support",
        'https://data.mos.ru/opendata/1499'::text "source",
        'clock'::text "amenity",
+       'https://data.mos.ru/opendata/1499/row/' || "Код" "website",
        -"№" id
   FROM "Часы Москвы"."1 Часы Моссвет" "ч";
    
@@ -204,7 +205,8 @@ WITH nodes  AS
         case when "support" is not null
              then xmlelement(name tag, xmlattributes ( 'support' as k, "support" as v))
          end ,
-        xmlelement(name tag, xmlattributes ( 'source' as k, "source" as v))
+        xmlelement(name tag, xmlattributes ( 'source' as k, "source" as v)),
+        xmlelement(name tag, xmlattributes ( 'website' as k, "website" as v))
         ) "tags"
    FROM "Часы Москвы"."3 Экспорт Моссвет" x
 ),
@@ -248,7 +250,7 @@ SELECT count(*) FROM "Часы Москвы"."1 Часы Моссвет" чм;
 CREATE MATERIALIZED VIEW "Часы Москвы"."1 Столбы data.mos.ru" AS
 WITH data AS (
 SELECT json_array_elements("JSON") fe
-  FROM "data.mos.ru столбы"
+  FROM "Часы Москвы"."data.mos.ru столбы"
 )        
 SELECT row_number() OVER () "№",
        st_geomFROMgeojson(fe ->> 'geoData') "φλ",       
@@ -280,8 +282,7 @@ CREATE MATERIALIZED VIEW "Часы Москвы"."2 Столбы с привяз
 
 CREATE MATERIALIZED VIEW "Часы Москвы"."2 Столбы с привязкой 1" as
 SELECT сo."Код OSM",
-       сo.φλ φλ_OSM,
-       ST_Buffer(сo.φλ, 10) b,
+       сo.φλ φλ_OSM,       
        сo."Оператор",
        сo."n💡" "n💡 OSM",
        сo."Ввод в строй",
