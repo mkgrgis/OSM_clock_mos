@@ -178,7 +178,7 @@ WITH features  AS (
 SELECT json_build_object(
        'type', 'Feature',
        'geometry', st_asgeojson(r."φλ")::json,
-       'properties', to_jsonb(r.*) - 'φλ') feature
+       'properties', to_jsonb(r.*) - 'φλ' - 'Δ м') feature
   FROM "Часы Москвы"."3 Экспорт Моссвет"r
 )
 SELECT json_build_object('type', 'FeatureCollection',
@@ -271,26 +271,7 @@ SELECT row_number() OVER () "№",
 FROM data;
 --CREATE INDEX "1_Столбы_data_mos_ru_φλ_IDX" ON "Часы Москвы"."1 Столбы data.mos.ru" (φλ);
 CREATE INDEX "1_Столбы_data_mos_ru_geo_IDX" ON "Часы Москвы"."1 Столбы data.mos.ru" ((st_transform(φλ,4326)::geography));;
+CREATE INDEX "1_Столбы_data_mos_ru_№_IDX" ON "Часы Москвы"."1 Столбы data.mos.ru" (№);
+CREATE INDEX "1_Столбы_data_mos_ru_Код_IDX" ON "Часы Москвы"."1 Столбы data.mos.ru" ("Код");
 
--- Ниже экспериментальные вычисления по столбам
-REFRESH MATERIALIZED VIEW "Часы Москвы"."1 Столбы data.mos.ru";
-SELECT count(*) FROM "Часы Москвы"."1 Столбы data.mos.ru";
-
-
-DROP MATERIALIZED VIEW "Часы Москвы"."2 Столбы с привязкой";
-CREATE MATERIALIZED VIEW "Часы Москвы"."2 Столбы с привязкой" as
-
-CREATE MATERIALIZED VIEW "Часы Москвы"."2 Столбы с привязкой 1" as
-SELECT сo."Код OSM",
-       сo.φλ φλ_OSM,       
-       сo."Оператор",
-       сo."n💡" "n💡 OSM",
-       сo."Ввод в строй",
-       см.*,       
-       ST_Distance(st_transform(сo.φλ,4326)::geography, st_transform(см.φλ,4326)::geography) "Δ м"
-  FROM "Часы Москвы"."1 Столбы data.mos.ru" см   
-  LEFT JOIN "Часы Москвы"."1 Столбы OSM" сo 
-    ON ST_DWithin(st_transform(сo.φλ,4326)::geography, st_transform(см.φλ,4326)::geography, 7, true);
-   
-   
-select * from "Часы Москвы"."2 Столбы с привязкой" см where см."Округ" = 'Южный административный округ';   
+-- Продолженеи в скрипте рассчёта по столбам
