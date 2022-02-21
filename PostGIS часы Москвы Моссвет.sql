@@ -3,13 +3,13 @@
 -- О ЗАГРУЗКЕ в таблицы см. https://wiki.openstreetmap.org/wiki/RU:Москва/Импорт_уличных_часов_Моссвет#.D0.9F.D0.BE.D0.B4.D0.B3.D0.BE.D1.82.D0.BE.D0.B2.D0.BA.D0.B0_.D1.82.D0.B0.D0.B1.D0.BB.D0.B8.D1.86
 
 CREATE TABLE "Часы Москвы"."data.mos.ru Часы" (
-	"GeoJSON" jsON NOT NULL
+	"GeoJSON" json NOT NULL
 );
 COMMENT ON TABLE "Часы Москвы"."data.mos.ru Часы" IS 'https://data.mos.ru/opendata/1499';
 
 
 CREATE TABLE "Часы Москвы"."OSM OverPass столбы" (
-    "JSON" jsON NOT NULL
+    "JSON" json NOT NULL
 );
 COMMENT ON TABLE "Часы Москвы"."OSM OverPass столбы" IS '[out:json];
 node
@@ -18,7 +18,7 @@ node
 out;';
 
 CREATE TABLE "Часы Москвы"."OSM OverPass часы" (
-    "JSON" jsON NOT NULL
+    "JSON" json NOT NULL
 );
 COMMENT ON TABLE "Часы Москвы"."OSM OverPass часы" IS '[out:json];
 node
@@ -33,7 +33,7 @@ COMMENT ON TABLE "Часы Москвы"."∄" IS 'Не существуют, о
 
 
 CREATE TABLE "Часы Москвы"."data.mos.ru столбы" (
-	"JSON" jsON NOT NULL
+	"JSON" json NOT NULL
 );
 COMMENT ON TABLE "Часы Москвы"."data.mos.ru столбы" IS 'https://data.mos.ru/opendata/61762';
 
