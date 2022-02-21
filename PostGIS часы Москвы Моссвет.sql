@@ -1,5 +1,6 @@
 -- ЧАСЫ И СТОЛБЫ МОСКВЫ
 -- Таблицы
+-- О ЗАГРУЗКЕ в таблицы см. https://wiki.openstreetmap.org/wiki/RU:Москва/Импорт_уличных_часов_Моссвет#.D0.9F.D0.BE.D0.B4.D0.B3.D0.BE.D1.82.D0.BE.D0.B2.D0.BA.D0.B0_.D1.82.D0.B0.D0.B1.D0.BB.D0.B8.D1.86
 
 CREATE TABLE "Часы Москвы"."data.mos.ru Часы" (
 	"GeoJSON" jsON NOT NULL
@@ -243,7 +244,7 @@ SELECT xmlelement(name "osmChange",
   FROM osc_create, osc_modify, osc_delete;
 
 -- Справка по размеру выгрузок
-SELECT count(*) FROM "Часы Москвы"."1 Столбы OSM";
+SELECT count(*) FROM "Часы Москвы"."1 Столбы OSM";для
 SELECT count(*) FROM "Часы Москвы"."1 Часы OSM" чo;
 SELECT count(*) FROM "Часы Москвы"."1 Часы Моссвет" чм;
 
@@ -262,7 +263,7 @@ SELECT row_number() OVER () "№",
        (fe ->> 'OnTerritoryOfMoscow') "В Москве",
        (fe ->> 'Owner') "Балансодержатель",
        (fe ->> 'Year')::int2 "Год",       
-       (fe ->> 'global_id')::int4 "Код",    
+       (fe ->> 'global_id')::int4 "Код",
        (fe ->> 'ID')::int4 "Код записи",
        --(fe ->> 'DatasetId')::int4 "Код таблицы",
        --(fe ->> 'VersionNumber')::int4 "Версия табл.",
@@ -274,4 +275,4 @@ CREATE INDEX "1_Столбы_data_mos_ru_geo_IDX" ON "Часы Москвы"."1 
 CREATE INDEX "1_Столбы_data_mos_ru_№_IDX" ON "Часы Москвы"."1 Столбы data.mos.ru" (№);
 CREATE INDEX "1_Столбы_data_mos_ru_Код_IDX" ON "Часы Москвы"."1 Столбы data.mos.ru" ("Код");
 
--- Продолженеи в скрипте рассчёта по столбам
+-- Продолжение в скрипте рассчёта по столбам
